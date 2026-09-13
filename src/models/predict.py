@@ -37,9 +37,12 @@ def get_classes():
 
 def load_model():
     model = get_model()
-    model.load_state_dict(torch.load(config.get("paths", "model_path")))
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    model.load_state_dict(torch.load(config.get("paths", "model_path"), map_location=device))
+    model.to(device)
     model.eval()
     return model
+
 
 
 def predict(image_path):
@@ -60,14 +63,13 @@ def predict(image_path):
 def predict_multiple(image_paths):
     model = load_model()
     classes = get_classes()
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     results = {}
 
-    import torch.nn.functional as F
-
     for path in image_paths:
         image = Image.open(path).convert("RGB")
-        image = transform(image).unsqueeze(0)
+        image = transform(image).unsqueeze(0).to(device)
 
         with torch.no_grad():
             outputs = model(image)
@@ -77,6 +79,7 @@ def predict_multiple(image_paths):
 
         label = classes[predicted.item()]
         conf = confidence.item()
+
 
         if label not in results:
             results[label] = []
