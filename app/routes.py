@@ -1,6 +1,5 @@
-from fastapi import APIRouter, UploadFile, File, Request
-from fastapi.responses import HTMLResponse
-from fastapi.templating import Jinja2Templates
+from fastapi import APIRouter, UploadFile, File
+from fastapi.responses import FileResponse
 from typing import List
 import shutil
 import os
@@ -12,12 +11,13 @@ router = APIRouter()
 UPLOAD_DIR = "temp"
 os.makedirs(UPLOAD_DIR, exist_ok=True)
 
-templates = Jinja2Templates(directory="templates")
 
+@router.get("/")
+def home():
+    if os.path.exists("templates/index.html"):
+        return FileResponse("templates/index.html")
+    return {"message": "Skin Disease API Running"}
 
-@router.get("/", response_class=HTMLResponse)
-def home(request: Request):
-    return templates.TemplateResponse("index.html", {"request": request})
 
 
 @router.post("/predict")
