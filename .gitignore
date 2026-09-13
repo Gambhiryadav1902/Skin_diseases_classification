@@ -1,0 +1,25 @@
+# Python
+venv/
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Mac
+.DS_Store
+.localized
+
+# Environment & logs
+.env
+logs/
+temp/
+data/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Temporary / Word lock files
+~$*
+*.docx
+your_image.jpg
