@@ -17,8 +17,8 @@ def get_model():
 
     logger.info(f"Initializing model with {num_classes} classes")
 
-    # Load pretrained model
-    model = models.efficientnet_b0(weights="IMAGENET1K_V1")
+    # Load model architecture (weights are loaded from trained_model.pt)
+    model = models.efficientnet_b0(weights=None)
 
     # Freeze all layers except last few
     for param in model.features[-2:].parameters():

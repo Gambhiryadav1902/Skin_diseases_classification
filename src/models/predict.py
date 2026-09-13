@@ -20,28 +20,36 @@ transform = transforms.Compose([
 ])
 
 
+_CACHED_CLASSES = [
+    "Lichen",
+    "Lupus",
+    "Moles",
+    "Psoriasis",
+    "Rosacea",
+    "Seborrheic Keratoses"
+]
+_CACHED_MODEL = None
+
+
 def get_classes():
-    try:
-        train_loader, _ = get_dataloaders()
-        return train_loader.dataset.classes
-    except Exception:
-        return [
-            "Lichen",
-            "Lupus",
-            "Moles",
-            "Psoriasis",
-            "Rosacea",
-            "Seborrheic Keratoses"
-        ]
+    return _CACHED_CLASSES
 
 
 def load_model():
+    global _CACHED_MODEL
+    if _CACHED_MODEL is not None:
+        return _CACHED_MODEL
+
     model = get_model()
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    model.load_state_dict(torch.load(config.get("paths", "model_path"), map_location=device))
+    model_path = config.get("paths", "model_path")
+    if os.path.exists(model_path):
+        model.load_state_dict(torch.load(model_path, map_location=device))
     model.to(device)
     model.eval()
-    return model
+    _CACHED_MODEL = model
+    return _CACHED_MODEL
+
 
 
 
