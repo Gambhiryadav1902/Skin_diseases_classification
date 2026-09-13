@@ -1,3 +1,4 @@
+import os
 import torch
 from PIL import Image
 from torchvision import transforms
@@ -5,7 +6,7 @@ import torch.nn.functional as F
 
 from src.models.model import get_model
 from src.config.config import Config
-from src.data.loader import get_dataloaders   # ✅ ADD HERE
+
 
 config = Config()
 
